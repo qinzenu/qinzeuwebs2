@@ -9,13 +9,18 @@
    <style>
     :root { 
         --primary: #ff3131; 
-        --bg-overlay: rgba(0, 0, 0, 0.5); 
-        --glass: rgba(255, 255, 255, 0.1); 
-        --glass-heavy: rgba(30, 30, 30, 0.55); 
+        --bg-overlay: rgba(0, 0, 0, 0.6); 
+        --glass-heavy: rgba(30, 30, 30, 0.65); 
         --border: rgba(255, 49, 49, 0.4); 
     }
     
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; -webkit-font-smoothing: antialiased; }
+    * { 
+        box-sizing: border-box; 
+        -webkit-tap-highlight-color: transparent; 
+        user-select: none; 
+        -webkit-user-select: none; 
+        -webkit-font-smoothing: antialiased; 
+    }
 
     body { 
         margin: 0; 
@@ -49,19 +54,19 @@
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
         border: 1px solid var(--border);
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
     }
 
     .filter-nav { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
     
     .btn { 
-        background: rgba(0, 0, 0, 0.3); 
+        background: rgba(0, 0, 0, 0.4); 
         border: 1px solid var(--border); 
         color: #ddd; 
-        padding: 10px 22px; 
+        padding: 10px 20px; 
         border-radius: 20px; 
         cursor: pointer; 
-        font-size: 0.75rem; 
+        font-size: 0.7rem; 
         font-weight: 700;
         transition: 0.3s;
         text-transform: uppercase;
@@ -75,23 +80,22 @@
         box-shadow: 0 5px 15px rgba(255,49,49,0.4); 
     }
     
-    /* --- UPDATE: Menambahkan padding agar tidak mepet border --- */
     .stats { 
         display: grid; 
         grid-template-columns: repeat(3, 1fr); 
         gap: 10px; 
         margin-bottom: 20px; 
-        padding: 0 10px; /* Jarak aman dari pinggir layar */
+        padding: 0 5px;
     }
     
     .card { 
-        padding: 15px 5px; 
+        padding: 12px 5px; 
         border-radius: 15px; 
         text-align: center; 
     }
     
-    .card h3 { font-size: 0.6rem; color: #eee; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; }
-    .card p { font-size: 1.4rem; font-weight: 700; margin: 0; }
+    .card h3 { font-size: 0.55rem; color: #eee; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; }
+    .card p { font-size: 1.2rem; font-weight: 700; margin: 0; }
     
     .table-wrap { 
         border-radius: 18px; 
@@ -99,53 +103,68 @@
         margin-bottom: 30px;
     }
     
-    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    /* FIX: Menggunakan auto agar kolom menyesuaikan konten */
+    table { width: 100%; border-collapse: collapse; table-layout: auto; }
     
     th { 
-        background: rgba(255, 49, 49, 0.25); 
+        background: rgba(255, 49, 49, 0.3); 
         color: #fff; 
         padding: 15px 10px; 
         text-align: left; 
-        font-size: 0.7rem; 
+        font-size: 0.65rem; 
         text-transform: uppercase; 
         letter-spacing: 1px; 
     }
 
-    td { padding: 14px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; vertical-align: middle; }
+    td { 
+        padding: 12px 10px; 
+        border-bottom: 1px solid rgba(255,255,255,0.05); 
+        font-size: 0.8rem; 
+        vertical-align: middle; 
+    }
     
-    th:nth-child(1), td:nth-child(1) { width: 100px; } 
+    /* Penyesuaian lebar kolom */
+    th:nth-child(1), td:nth-child(1) { width: 85px; } 
     th:nth-child(2), td:nth-child(2) { width: auto; } 
-    th:nth-child(3), td:nth-child(3) { width: 85px; text-align: right; }
+    th:nth-child(3), td:nth-child(3) { width: 80px; text-align: right; }
 
     .time-wrapper { display: flex; flex-direction: column; }
-    .date-text { color: #ccc; font-size: 0.6rem; }
+    .date-text { color: #aaa; font-size: 0.55rem; }
     .hour-text { color: var(--primary); font-size: 0.75rem; font-weight: 700; }
 
-    .name-text { color: #fff; font-weight: 600; line-height: 1.2; word-break: break-word; }
+    /* FIX: Agar nama panjang otomatis turun ke bawah */
+    .name-text { 
+        color: #fff; 
+        font-weight: 600; 
+        line-height: 1.3; 
+        word-break: break-word; 
+        display: block;
+        white-space: normal; 
+    }
 
     .badge { 
-        padding: 4px 8px; 
-        border-radius: 8px; 
-        font-size: 0.55rem; 
+        padding: 4px 10px; 
+        border-radius: 6px; 
+        font-size: 0.6rem; 
         font-weight: 800; 
         text-transform: uppercase; 
         display: inline-block; 
     }
     
-    .bg-hadir { background: rgba(34,197,94,0.3); color: #4ade80; border: 1px solid rgba(34,197,94,0.5); }
-    .bg-izin { background: rgba(250,204,21,0.3); color: #fde047; border: 1px solid rgba(250,204,21,0.5); }
+    .bg-hadir { background: rgba(34,197,94,0.25); color: #4ade80; border: 1px solid rgba(34,197,94,0.4); }
+    .bg-izin { background: rgba(250,204,21,0.25); color: #fde047; border: 1px solid rgba(250,204,21,0.4); }
 
     .loader {
         display: none;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 50px 20px;
+        padding: 40px 20px;
         gap: 15px;
     }
 
     .spinner {
-        width: 35px; height: 35px;
+        width: 30px; height: 30px;
         border: 3px solid rgba(255, 49, 49, 0.1);
         border-top: 3px solid var(--primary);
         border-radius: 50%;
@@ -154,11 +173,10 @@
 
     #loading-text {
         color: var(--primary);
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 2px;
-        min-width: 160px;
         text-align: center;
     }
 
@@ -311,44 +329,45 @@
     let isFetching = false; 
 
     const manualMembers = [
-    { nama: "𝘿𝙖𝙣𝙉𝙚𝙬𝙗𝙞𝙚 ft 𝗔𝗣", jabatan: "KETUA" },
-    { nama: '𝙎𝙝𝙞𝙣𝙉𝙚𝙬𝙗𝙞𝙚"ft S4G', jabatan: "ADMIN" },
-    { nama: "𝙕𝙚𝙣𝙪𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "ADMIN" },
-    { nama: "𝘿𝙖𝙛𝙛𝙉𝙚𝙬𝙗𝙞𝙚•_", jabatan: "ADMIN" },
-    { nama: "𝐗𝟕 NittNewbie ft EGS", jabatan: "ADMIN" },
-    { nama: "𝙉𝙤𝙥𝙥𝙉𝙚𝙬𝙗𝙞𝙚 ft'𝟰𝟭𝟭", jabatan: "ADMIN" },
-    { nama: "𝙁𝙪𝙡𝙯𝙯 𝙉𝙚𝙬𝙗𝙞𝙚.", jabatan: "MEMBER" },
-    { nama: "𝙆𝙝𝙧𝙞𝙡𝙡𝙡𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
-    { nama: "𝙃𝙖𝙣𝙯𝙉𝙚𝙬𝙗𝙞𝙚Kyoken`S4G", jabatan: "MEMBER" },
-    { nama: "𝙁𝘼𝙍𝙕𝙕𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
-    { nama: "𝙎𝙖𝙝𝙞𝙧𝙪𝙉𝙚𝙬𝙗i`ᶠᵗ𝘼𝙀𝙂", jabatan: "MEMBER" },
-    { nama: "𝘽𝙖𝙧𝙧𝙉𝙚𝙬𝙗𝙞𝙚`VSC(紫雲寺)", jabatan: "MEMBER" },
-    { nama: "𝐋𝟕`𝙕𝙞𝙙𝙖𝙣𝙉𝙚𝙬𝙗𝙞𝙚紫雲寺", jabatan: "MEMBER" },
-    { nama: "FIzz 𝙉𝙚𝙬𝘽𝙞𝙚 𝖋𝖙 𝘼𝙀𝙄⭐", jabatan: "MEMBER" },
-    { nama: "YukiNewbie", jabatan: "MEMBER" },
-    // Tambahan terbaru:
-    { nama: "𝙑𝙖𝙣𝙯𝙉𝙚𝙬𝙗𝙞𝙚`𝖿𝗍 𝐒𝐏", jabatan: "MEMBER" },
-    { nama: "RYANEWBIE XPN", jabatan: "MEMBER" },
-    { nama: "𝙆𝙠𝙖𝙖𝙉𝙚𝙬𝙗𝙞𝙚 ft 𝗦𝗔𝗖", jabatan: "MEMBER" },
-    { nama: "1𝙁𝙈𝙖𝙡𝙯𝙉𝙚𝙬𝙗𝙞𝙚'𝙎𝘾𝙆", jabatan: "MEMBER" },
-    { nama: "𝙋𝙪𝙩𝙩𝙉𝙚𝙬𝙗𝙞𝙚 𝖋𝖙 𝘼𝙋", jabatan: "MEMBER" },
-    { nama: "Clara`newbie†.♡♪", jabatan: "MEMBER" },
-    { nama: "Kayy𝙉𝙚𝙬𝙗𝙞𝙚{紫雲寺}𝙍𝙮𝙪 ft", jabatan: "MEMBER" },
-    { nama: "SGN_Shellynewbiee🐚", jabatan: "MEMBER" },
-    { nama: "CLOUDYNewbie 𝙛𝙩 𝙆𝙋𝙉〆", jabatan: "MEMBER" },
-    { nama: "RaffNewbie", jabatan: "MEMBER" },
-    { nama: "𝘿𝙖𝙩𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
-    { nama: "𝘼𝘾𝙂| 𝙉𝙣1𝙚𝙡𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
-    { nama: "𝙉𝙙𝙧𝙚𝙉𝙚𝙬𝙗𝙞𝙚 𝙛𝙩 𝗫𝗥", jabatan: "MEMBER" },
-    { nama: "𝐄𝐑𝐀| 𝘼𝙣𝙜𝙜𝙖𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
-    { nama: "𝙁𝙖𝙖𝙉𝙚𝙬𝙗𝙞𝙚 𝗳𝘁'𝗠𝗘𝗔", jabatan: "MEMBER" },
-    { nama: "7P'𝗬𝗮𝗻𝗻𝗡𝗲𝘄𝗕𝗶𝗲`𝗘𝗚𝗦", jabatan: "MEMBER" },
-    { nama: "𝙁𝙖𝙣ﾒ𝙉𝙚𝙬𝙗𝙞𝙚 {紫雲寺}", jabatan: "MEMBER" },
-    { nama: "`𝙍𝙮𝙥𝙯𝙉 𝙇𝙮𝙣𝙭𝙞𝙚.", jabatan: "MEMBER" },
-    { nama: "𝘿𝙖𝙣𝙯 𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
-    { nama: "—►𝘾𝙮𝙣𝙣'𝙉𝙚𝙬𝙗𝙞𝙚【桜の花】", jabatan: "MEMBER" },
-    { nama: "Alice'𝙉𝙚𝙬𝙗𝙞𝙚`𝖋𝖙 𝐍𝐂𝐀", jabatan: "MEMBER" }  
-];
+        { nama: "𝘿𝙖𝙣𝙉𝙚𝙬𝙗𝙞𝙚 ft 𝗔𝗣", jabatan: "KETUA" },
+        { nama: '𝙎𝙝𝙞𝙣𝙉𝙚𝙬𝙗𝙞𝙚"ft S4G', jabatan: "ADMIN" },
+        { nama: "𝙕𝙚𝙣𝙪𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "ADMIN" },
+        { nama: "𝘿𝙖𝙛𝙛𝙉𝙚𝙬𝙗𝙞𝙚•_", jabatan: "ADMIN" },
+        { nama: "𝐗𝟕 NittNewbie ft EGS", jabatan: "ADMIN" },
+        { nama: "𝙉𝙤𝙥𝙥𝙉𝙚𝙬𝙗𝙞𝙚 ft'𝟰𝟭𝟭", jabatan: "ADMIN" },
+        { nama: "𝙁𝙪𝙡𝙯𝙯 𝙉𝙚𝙬𝙗𝙞𝙚.", jabatan: "MEMBER" },
+        { nama: "𝙆𝙝𝙧𝙞𝙡𝙡𝙡𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
+        { nama: "𝙃𝙖𝙣𝙯𝙉𝙚𝙬𝙗𝙞𝙚Kyoken`S4G", jabatan: "MEMBER" },
+        { nama: "𝙁𝘼𝙍𝙕𝙕𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
+        { nama: "𝙎𝙖𝙝𝙞𝙧𝙪𝙉𝙚𝙬𝙗i`ᶠᵗ𝘼𝙀𝙂", jabatan: "MEMBER" },
+        { nama: "𝘽𝙖𝙧𝙧𝙉𝙚𝙬𝙗𝙞𝙚`VSC(紫雲寺)", jabatan: "MEMBER" },
+        { nama: "𝐋𝟕`𝙕𝙞𝙙𝙖𝙣𝙉𝙚𝙬𝙗𝙞𝙚紫雲寺", jabatan: "MEMBER" },
+        { nama: "FIzz 𝙉𝙚𝙬𝘽𝙞𝙚 𝖋𝖙 𝘼𝙀𝙄⭐", jabatan: "MEMBER" },
+        { nama: "YukiNewbie", jabatan: "MEMBER" },
+        { nama: "𝙑𝙖𝙣𝙯𝙉𝙚𝙬𝙗𝙞𝙚`𝖿𝗍 𝐒𝐏", jabatan: "MEMBER" },
+        { nama: "RYANEWBIE XPN", jabatan: "MEMBER" },
+        { nama: "𝙆𝙠𝙖𝙖𝙉𝙚𝙬𝙗𝙞𝙚 ft 𝗦𝗔𝗖", jabatan: "MEMBER" },
+        { nama: "1𝙁𝙈𝙖𝙡𝙯𝙉𝙚𝙬𝙗𝙞𝙚'𝙎𝘾𝙆", jabatan: "MEMBER" },
+        { nama: "𝙋𝙪𝙩𝙩𝙉𝙚𝙬𝙗𝙞𝙚 𝖋𝖙 𝘼𝙋", jabatan: "MEMBER" },
+        { nama: "Clara`newbie†.♡♪", jabatan: "MEMBER" },
+        { nama: "Kayy𝙉𝙚𝙬𝙗𝙞𝙚{紫雲寺}𝙍𝙮𝙪 ft", jabatan: "MEMBER" },
+        { nama: "SGN_Shellynewbiee🐚", jabatan: "MEMBER" },
+        { nama: "CLOUDYNewbie 𝙛𝙩 𝙆𝙋𝙉〆", jabatan: "MEMBER" },
+        { nama: "RaffNewbie", jabatan: "MEMBER" },
+        { nama: "𝘿𝙖𝙩𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
+        { nama: "𝘼𝘾𝙂| 𝙉𝙣1𝙚𝙡𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
+        { nama: "𝙉𝙙𝙧𝙚𝙉𝙚𝙬𝙗𝙞𝙚 𝙛𝙩 𝗫𝗥", jabatan: "MEMBER" },
+        { nama: "𝐄𝐑Α| 𝘼𝙣𝙜𝙜𝙖𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
+        { nama: "𝙁𝙖𝙖𝙉𝙚𝙬𝙗𝙞𝙚 𝗳𝘁'𝗠𝗘𝗔", jabatan: "MEMBER" },
+        { nama: "7P'𝗬𝗮𝗻𝗻Ν𝗲𝘄𝗕𝗶𝗲`𝗘𝗚𝗦", jabatan: "MEMBER" },
+        { nama: "𝙁𝙖𝙣ﾒ𝙉𝙚𝙬𝙗𝙞𝙚 {紫雲寺}", jabatan: "MEMBER" },
+        { nama: "`𝙍𝙮𝙥𝙯𝙉 𝙇𝙮𝙣𝙭𝙞𝙚.", jabatan: "MEMBER" },
+        { nama: "𝘿𝙖𝙣𝙯 𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
+        { nama: "—►𝘾𝙮𝙣𝙣'𝙉𝙚𝙬𝙗𝙞𝙚【桜の花】", jabatan: "MEMBER" },
+        { nama: "Alice'𝙉𝙚𝙬𝙗𝙞𝙚`𝖋𝖙 𝐍𝐂Α", jabatan: "MEMBER" },
+        { nama: "—𝙉𝙪𝙧𝙯𝙯𝙉𝙚𝙬𝙗𝙞𝙚友", jabatan: "MEMBER" },
+        { nama: "JAR𝙉𝙚𝙬𝙗𝙞𝙚 FT XP", jabatan: "MEMBER" }
+    ];
 
     const LoadingManager = {
         interval: null,
@@ -387,122 +406,113 @@
     };
 
     function setFilter(type) {
-    if (isFetching) return;
-    filterType = type;
-    
-    document.getElementById('btnToday').classList.toggle('active', type === 'today');
-    document.getElementById('btnAll').classList.toggle('active', type === 'all');
-    document.getElementById('btnMem').classList.toggle('active', type === 'members');
-    
-    const statsContainer = document.querySelector('.stats');
-    const cards = document.querySelectorAll('.stats .card');
-    const labelTotal = cards[0].querySelector('h3');
-    const labelHadir = cards[1].querySelector('h3');
-    const angkaHadir = document.getElementById('tHadir'); 
-    const headers = document.querySelectorAll('#mainTable th');
+        if (isFetching) return;
+        filterType = type;
+        
+        document.getElementById('btnToday').classList.toggle('active', type === 'today');
+        document.getElementById('btnAll').classList.toggle('active', type === 'all');
+        document.getElementById('btnMem').classList.toggle('active', type === 'members');
+        
+        const statsContainer = document.querySelector('.stats');
+        const cards = document.querySelectorAll('.stats .card');
+        const labelTotal = cards[0].querySelector('h3');
+        const labelHadir = cards[1].querySelector('h3');
+        const headers = document.querySelectorAll('#mainTable th');
 
-    if (type === 'members') {
-        cards[2].style.display = 'none';
-        statsContainer.style.display = 'flex';
-        statsContainer.style.justifyContent = 'center';
-        statsContainer.style.gap = '20px';
-        
-        cards[0].style.width = '120px';
-        cards[1].style.width = '120px';
+        if (type === 'members') {
+            cards[2].style.display = 'none';
+            statsContainer.style.display = 'flex';
+            statsContainer.style.justifyContent = 'center';
+            statsContainer.style.gap = '20px';
+            cards[0].style.width = '120px';
+            cards[1].style.width = '120px';
 
-        labelTotal.innerText = "TOTAL MEMBER";
-        labelHadir.innerText = "TOTAL ABSEN\nHARI INI";
-        labelHadir.style.color = "#ffffff"; 
-        
-        if (angkaHadir) angkaHadir.style.color = "#4ade80"; 
-        
-        // --- PERBAIKAN DI SINI ---
-        headers[0].innerText = "NO.";
-        headers[0].style.textAlign = "center"; // Membuat teks header "NO." di tengah
-        headers[1].style.textAlign = "left";   // Tetap kiri untuk "NAMA"
-        headers[2].innerText = "";
-        headers[2].style.textAlign = "right";  // Tetap kanan untuk "JABATAN"
-        
-        renderManualMembers();
-    } else {
-        cards[2].style.display = 'block';
-        statsContainer.style.display = 'grid'; 
-        statsContainer.style.gridTemplateColumns = 'repeat(3, 1fr)';
-        statsContainer.style.gap = '10px';
-        
-        cards[0].style.width = '';
-        cards[1].style.width = '';
-        
-        labelTotal.innerText = "TOTAL ABSEN";
-        labelHadir.innerText = "TOTAL HADIR";
-        labelHadir.style.color = "";
-        
-        // --- RESET STYLE HEADER ---
-        headers[0].innerText = "WAKTU ABSEN";
-        headers[0].style.textAlign = "left"; 
-        headers[1].style.textAlign = "left";
-        headers[2].innerText = "STATUS";
-        headers[2].style.textAlign = "right";
+            labelTotal.innerText = "TOTAL MEMBER";
+            labelHadir.innerText = "ABSEN HARI INI";
+            
+            headers[0].innerText = "NO.";
+            headers[0].style.textAlign = "center";
+            headers[1].innerText = "NAMA MEMBER";
+            headers[2].innerText = "JABATAN";
+            
+            renderManualMembers();
+        } else {
+            cards[2].style.display = 'block';
+            statsContainer.style.display = 'grid'; 
+            statsContainer.style.gridTemplateColumns = 'repeat(3, 1fr)';
+            statsContainer.style.gap = '10px';
+            cards[0].style.width = '';
+            cards[1].style.width = '';
+            
+            labelTotal.innerText = "TOTAL ABSEN";
+            labelHadir.innerText = "TOTAL HADIR";
+            
+            headers[0].innerText = "WAKTU ABSEN";
+            headers[0].style.textAlign = "left"; 
+            headers[1].innerText = "NAMA MEMBER";
+            headers[2].innerText = "STATUS";
 
-        fetchData(true);
+            fetchData(true);
+        }
     }
-}
 
     async function renderManualMembers() {
-    isFetching = true;
-    const containerId = 'loading';
-    const tableBody = document.getElementById('tableBody');
-    const startTime = Date.now();
+        isFetching = true;
+        const containerId = 'loading';
+        const tableBody = document.getElementById('tableBody');
+        const startTime = Date.now();
 
-    LoadingManager.start('loading-text', containerId);
+        LoadingManager.start('loading-text', containerId);
 
-    try {
-        const response = await fetch(`${csvUrl}&v=${Date.now()}`);
-        const text = await response.text();
-        const rows = text.split(/\r?\n/).slice(1);
-        const now = new Date();
-        const f1 = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
-        const f2 = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+        try {
+            const response = await fetch(`${csvUrl}&v=${Date.now()}`);
+            const text = await response.text();
+            const rows = text.split(/\r?\n/).slice(1);
+            const now = new Date();
+            const f1 = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+            const f2 = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
 
-        let countToday = 0;
-        rows.forEach(row => {
-            const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            if (c[0]) {
-                const dateOnly = c[0].replace(/"/g, '').split(' ')[0];
-                if (dateOnly === f1 || dateOnly === f2) countToday++;
-            }
-        });
+            let countToday = 0;
+            rows.forEach(row => {
+                const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                if (c[0]) {
+                    const dateOnly = c[0].replace(/"/g, '').split(' ')[0];
+                    if (dateOnly === f1 || dateOnly === f2) countToday++;
+                }
+            });
 
-        let html = '';
-    manualMembers.forEach((m, index) => {
-        html += `<tr>
-            <td style="text-align: center; vertical-align: middle; width: 50px;">
-                <span class="hour-text" style="color: #ff3131; font-weight: 800; display: block; width: 100%;">${index + 1}</span>
-            </td>
-            <td style="text-align: left;">
-                <span class="name-text" style="font-weight: 600; white-space: nowrap;">${m.nama}</span>
-            </td>
-            <td style="text-align: right; padding-right: 15px;">
-                <span class="badge" style="border: 1px solid #ff3131; color: white; background: rgba(255,49,49,0.1); padding: 5px 10px; border-radius: 4px; font-size: 8px; font-weight: bold; display: inline-block; white-space: nowrap; min-width: 65px; text-align: center;">
-                    ${m.jabatan}
-                </span>
-            </td>
-        </tr>`;
-    });
+            let html = '';
+            manualMembers.forEach((m, index) => {
+                // FIX: Menghapus white-space: nowrap agar nama bisa membungkus ke bawah
+                html += `<tr>
+                    <td style="text-align: center; width: 50px;">
+                        <span class="hour-text">${index + 1}</span>
+                    </td>
+                    <td>
+                        <span class="name-text">${m.nama}</span>
+                    </td>
+                    <td style="text-align: right;">
+                        <span class="badge" style="border: 1px solid var(--primary); color: white; background: rgba(255,49,49,0.1); min-width: 75px; text-align: center;">
+                            ${m.jabatan}
+                        </span>
+                    </td>
+                </tr>`;
+            });
 
-        setTimeout(() => {
-            tableBody.innerHTML = html;
-            document.getElementById('total').innerText = manualMembers.length;
-            document.getElementById('tHadir').innerText = countToday;
-            LoadingManager.stop(containerId);
+            setTimeout(() => {
+                tableBody.innerHTML = html;
+                document.getElementById('total').innerText = manualMembers.length;
+                document.getElementById('tHadir').innerText = countToday;
+                LoadingManager.stop(containerId);
+                isFetching = false;
+            }, Math.max(0, 600 - (Date.now() - startTime)));
+
+        } catch (e) {
+            LoadingManager.error('loading-text');
             isFetching = false;
-        }, Math.max(0, 600 - (Date.now() - startTime)));
-
-    } catch (e) {
-        LoadingManager.error('loading-text');
-        isFetching = false;
+        }
     }
-}
+
     async function fetchData(isManual = false) {
         if (filterType === 'members') return;
         if (isFetching && !isManual) return;
@@ -518,7 +528,7 @@
             const response = await fetch(`${csvUrl}&v=${Date.now()}`);
             if (!response.ok) throw new Error('Network error');
             const text = await response.text();
-            const rows = text.split(/\r?\n/).slice(1).filter(r => r.trim() !== "" && r.replace(/,/g, '').trim() !== "").reverse();
+            const rows = text.split(/\r?\n/).slice(1).filter(r => r.trim() !== "").reverse();
             
             const now = new Date();
             const format1 = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
@@ -528,18 +538,10 @@
 
             rows.forEach(row => {
                 const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/"/g, '').trim());
-                if (!c[0] || !c[1] || c.length < 5) return;
+                if (c.length < 5) return;
 
-                const timestampFull = c[0]; 
-                const parts = timestampFull.split(' ');
-                const dateOnly = parts[0];
-                
-                let timeOnly = "--:--";
-                if (parts[1]) {
-                    let rawTime = parts[1].trim();
-                    if (rawTime.indexOf(':') === 1) rawTime = '0' + rawTime;
-                    timeOnly = rawTime.substring(0, 5);
-                }
+                const dateOnly = c[0].split(' ')[0];
+                const timeOnly = c[0].split(' ')[1] ? c[0].split(' ')[1].substring(0, 5) : "--:--";
                 
                 const isToday = (dateOnly === format1 || dateOnly === format2);
                 if (filterType === 'today' && !isToday) return;
@@ -548,7 +550,7 @@
                 const isIzin = status.toLowerCase() === 'izin';
                 
                 t++;
-                if (isIzin) i++; else h++;
+                isIzin ? i++ : h++;
 
                 html += `<tr>
                     <td>
@@ -569,8 +571,6 @@
                 document.getElementById('total').innerText = t;
                 document.getElementById('tHadir').innerText = h;
                 document.getElementById('tIzin').innerText = i;
-                document.getElementById('tHadir').style.color = "#4ade80";
-                document.getElementById('tIzin').style.color = "#fde047";
                 LoadingManager.stop(containerId);
                 isFetching = false;
             }, Math.max(0, 800 - (Date.now() - startTime)));
