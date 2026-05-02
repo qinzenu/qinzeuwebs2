@@ -11,26 +11,43 @@
         --primary: #ff3131; 
         --bg-overlay: rgba(0, 0, 0, 0.5); 
         --glass: rgba(255, 255, 255, 0.1); 
-        --glass-heavy: rgba(30, 30, 30, 0.55); 
+        --glass-heavy: rgba(30, 30, 30, 0.7); /* Dibuat sedikit lebih gelap agar teks lebih kontras */
         --border: rgba(255, 49, 49, 0.4); 
     }
     
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    * { 
+        box-sizing: border-box; 
+        -webkit-tap-highlight-color: transparent; 
+        user-select: none; 
+        -webkit-user-select: none; 
+        -webkit-font-smoothing: antialiased; 
+    }
 
     body { 
         margin: 0; 
         padding: 15px; 
         color: white; 
         font-family: 'Poppins', sans-serif;
+        /* UPDATE: Gunakan background-attachment: fixed agar background tidak ikut tergulung (mencegah putih-putih) */
         background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
                     url('./vd/fotolivexjj.jpg');
         background-size: cover;
         background-position: center;
-        background-attachment: fixed;
+        background-attachment: fixed; 
         min-height: 100vh;
+        display: flex;
+        flex-direction: column;
     }
     
-    .container { max-width: 500px; margin: 0 auto; position: relative; z-index: 1; }
+    .container { 
+        max-width: 500px; 
+        margin: 0 auto; 
+        position: relative; 
+        z-index: 1; 
+        width: 100%;
+        /* UPDATE: Tambahkan padding bottom agar elemen terakhir tidak mepet ke bawah layar */
+        padding-bottom: 80px; 
+    }
     
     header { text-align: center; margin-bottom: 25px; }
     
@@ -75,13 +92,12 @@
         box-shadow: 0 5px 15px rgba(255,49,49,0.4); 
     }
     
-    /* --- UPDATE: Menambahkan padding agar tidak mepet border --- */
     .stats { 
         display: grid; 
         grid-template-columns: repeat(3, 1fr); 
         gap: 10px; 
         margin-bottom: 20px; 
-        padding: 0 10px; /* Jarak aman dari pinggir layar */
+        padding: 0 5px; 
     }
     
     .card { 
@@ -90,12 +106,21 @@
         text-align: center; 
     }
     
+    /* --- UPDATE: Posisi angka statistik (sesuai preferensi kamu sebelumnya di sisi kiri) --- */
+    .card p { 
+        font-size: 1.4rem; 
+        font-weight: 700; 
+        margin: 0; 
+        text-align: center; /* Tetap center di dalam box kecil, atau ubah ke left jika mau di pinggir */
+    }
+    
     .card h3 { font-size: 0.6rem; color: #eee; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; }
-    .card p { font-size: 1.4rem; font-weight: 700; margin: 0; }
     
     .table-wrap { 
         border-radius: 18px; 
-        overflow: hidden; 
+        /* UPDATE: Jangan gunakan overflow: hidden jika ingin tabel memanjang alami, 
+           atau pastikan pembungkusnya tidak memotong konten */
+        overflow: visible; 
         margin-bottom: 30px;
     }
     
@@ -111,7 +136,12 @@
         letter-spacing: 1px; 
     }
 
-    td { padding: 14px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; vertical-align: middle; }
+    td { 
+        padding: 14px 10px; 
+        border-bottom: 1px solid rgba(255,255,255,0.1); 
+        font-size: 0.85rem; 
+        vertical-align: middle; 
+    }
     
     th:nth-child(1), td:nth-child(1) { width: 100px; } 
     th:nth-child(2), td:nth-child(2) { width: auto; } 
