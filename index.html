@@ -7,26 +7,21 @@
    <link rel="icon" href="https://i.ibb.co.com/1tBC2ngW/Logo-12-F8-F09.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
    <style>
-    /* --- UPDATE CSS: FIX GLASSMORPHISM EFFECT --- */
     :root { 
         --primary: #ff3131; 
-        /* Overlay ditingkatkan agar foto tidak terlalu terang dan teks terbaca */
         --bg-overlay: rgba(0, 0, 0, 0.5); 
         --glass: rgba(255, 255, 255, 0.1); 
-        /* Glass heavy disetel ke 0.4 - 0.6 agar efek blur punya "badan" */
         --glass-heavy: rgba(30, 30, 30, 0.55); 
         --border: rgba(255, 49, 49, 0.4); 
     }
     
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; -webkit-font-smoothing: antialiased;
-}
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; -webkit-font-smoothing: antialiased; }
 
     body { 
         margin: 0; 
         padding: 15px; 
         color: white; 
         font-family: 'Poppins', sans-serif;
-        /* Gunakan linear-gradient untuk menggelapkan foto latar */
         background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
                     url('./vd/fotolivexjj.jpg');
         background-size: cover;
@@ -49,7 +44,6 @@
         box-shadow: 0 0 20px rgba(255, 49, 49, 0.3);
     }
     
-    /* PENTING: Backdrop-filter membutuhkan background-color agar bekerja maksimal */
     .glass-effect {
         background-color: var(--glass-heavy) !important;
         backdrop-filter: blur(15px);
@@ -81,7 +75,14 @@
         box-shadow: 0 5px 15px rgba(255,49,49,0.4); 
     }
     
-    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    /* --- UPDATE: Menambahkan padding agar tidak mepet border --- */
+    .stats { 
+        display: grid; 
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 10px; 
+        margin-bottom: 20px; 
+        padding: 0 10px; /* Jarak aman dari pinggir layar */
+    }
     
     .card { 
         padding: 15px 5px; 
@@ -134,7 +135,6 @@
     .bg-hadir { background: rgba(34,197,94,0.3); color: #4ade80; border: 1px solid rgba(34,197,94,0.5); }
     .bg-izin { background: rgba(250,204,21,0.3); color: #fde047; border: 1px solid rgba(250,204,21,0.5); }
 
-    /* LOADER */
     .loader {
         display: none;
         flex-direction: column;
@@ -165,8 +165,98 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     tr:hover td { background: rgba(255, 255, 255, 0.1); transition: 0.2s; }
 </style>
+<style>
+        .update-popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+        }
+
+        .update-box {
+            width: 90%;
+            max-width: 360px;
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .update-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .update-header h3 {
+            color: #ff3131;
+            font-size: 1.1rem;
+        }
+
+        #closeUpdate {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .update-body {
+            font-size: 0.85rem;
+            color: #ddd;
+            line-height: 1.5;
+        }
+
+        /* Pastikan tabel mengambil lebar penuh dan mengizinkan konten melebar */
+#mainTable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto; /* Biarkan browser menyesuaikan lebar berdasarkan konten */
+}
+
+/* Membungkus tabel agar bisa di-scroll secara horizontal jika nama sangat panjang */
+.table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Styling kolom nama */
+.name-text {
+    display: block;
+    text-align: left;
+    white-space: nowrap; /* Mencegah nama turun ke bawah */
+    overflow: visible;   /* Pastikan tidak tersembunyi */
+    min-width: 150px;    /* Memberikan ruang minimal untuk nama */
+}
+
+/* Memastikan sel tabel tidak memotong konten */
+#mainTable td {
+    padding: 10px 5px;
+    overflow: visible;
+}
+    
+    </style>
 </head>
 <body>
+    <div id="updatePopup" class="update-popup">
+        <div class="update-box">
+            <div class="update-header">
+                <h3>New Update</h3>
+                <button id="closeUpdate">✕</button>
+            </div>
+
+            <div class="update-body">
+                <p>
+                    • Penambahan List Member<br><br>
+                </p>
+            </div>
+        </div>
+    </div>
 
 <div class="container">
     <header>
@@ -178,6 +268,7 @@
     <div class="filter-nav">
         <button id="btnToday" class="btn active" onclick="setFilter('today')">HARI INI</button>
         <button id="btnAll" class="btn" onclick="setFilter('all')">SEMUA</button>
+        <button id="btnMem" class="btn" onclick="setFilter('members')">ANGGOTA</button>
     </div>
 
     <div class="stats">
@@ -219,49 +310,74 @@
     let filterType = 'today';
     let isFetching = false; 
 
+    const manualMembers = [
+    { nama: "𝘿𝙖𝙣𝙉𝙚𝙬𝙗𝙞𝙚 ft 𝗔𝗣", jabatan: "KETUA" },
+    { nama: '𝙎𝙝𝙞𝙣𝙉𝙚𝙬𝙗𝙞𝙚"ft S4G', jabatan: "ADMIN" },
+    { nama: "𝙕𝙚𝙣𝙪𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "ADMIN" },
+    { nama: "𝘿𝙖𝙛𝙛𝙉𝙚𝙬𝙗𝙞𝙚•_", jabatan: "ADMIN" },
+    { nama: "𝐗𝟕 NittNewbie ft EGS", jabatan: "ADMIN" },
+    { nama: "𝙉𝙤𝙥𝙥𝙉𝙚𝙬𝙗𝙞𝙚 ft'𝟰𝟭𝟭", jabatan: "ADMIN" },
+    { nama: "𝙁𝙪𝙡𝙯𝙯 𝙉𝙚𝙬𝙗𝙞𝙚.", jabatan: "MEMBER" },
+    { nama: "𝙆𝙝𝙧𝙞𝙡𝙡𝙡𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
+    { nama: "𝙃𝙖𝙣𝙯𝙉𝙚𝙬𝙗𝙞𝙚Kyoken`S4G", jabatan: "MEMBER" },
+    { nama: "𝙁𝘼𝙍𝙕𝙕𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
+    { nama: "𝙎𝙖𝙝𝙞𝙧𝙪𝙉𝙚𝙬𝙗i`ᶠᵗ𝘼𝙀𝙂", jabatan: "MEMBER" },
+    { nama: "𝘽𝙖𝙧𝙧𝙉𝙚𝙬𝙗𝙞𝙚`VSC(紫雲寺)", jabatan: "MEMBER" },
+    { nama: "𝐋𝟕`𝙕𝙞𝙙𝙖𝙣𝙉𝙚𝙬𝙗𝙞𝙚紫雲寺", jabatan: "MEMBER" },
+    { nama: "FIzz 𝙉𝙚𝙬𝘽𝙞𝙚 𝖋𝖙 𝘼𝙀𝙄⭐", jabatan: "MEMBER" },
+    { nama: "YukiNewbie", jabatan: "MEMBER" },
+    // Tambahan terbaru:
+    { nama: "𝙑𝙖𝙣𝙯𝙉𝙚𝙬𝙗𝙞𝙚`𝖿𝗍 𝐒𝐏", jabatan: "MEMBER" },
+    { nama: "RYANEWBIE XPN", jabatan: "MEMBER" },
+    { nama: "𝙆𝙠𝙖𝙖𝙉𝙚𝙬𝙗𝙞𝙚 ft 𝗦𝗔𝗖", jabatan: "MEMBER" },
+    { nama: "1𝙁𝙈𝙖𝙡𝙯𝙉𝙚𝙬𝙗𝙞𝙚'𝙎𝘾𝙆", jabatan: "MEMBER" },
+    { nama: "𝙋𝙪𝙩𝙩𝙉𝙚𝙬𝙗𝙞𝙚 𝖋𝖙 𝘼𝙋", jabatan: "MEMBER" },
+    { nama: "Clara`newbie†.♡♪", jabatan: "MEMBER" },
+    { nama: "Kayy𝙉𝙚𝙬𝙗𝙞𝙚{紫雲寺}𝙍𝙮𝙪 ft", jabatan: "MEMBER" },
+    { nama: "SGN_Shellynewbiee🐚", jabatan: "MEMBER" },
+    { nama: "CLOUDYNewbie 𝙛𝙩 𝙆𝙋𝙉〆", jabatan: "MEMBER" },
+    { nama: "RaffNewbie", jabatan: "MEMBER" },
+    { nama: "𝘿𝙖𝙩𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
+    { nama: "𝘼𝘾𝙂| 𝙉𝙣1𝙚𝙡𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
+    { nama: "𝙉𝙙𝙧𝙚𝙉𝙚𝙬𝙗𝙞𝙚 𝙛𝙩 𝗫𝗥", jabatan: "MEMBER" },
+    { nama: "𝐄𝐑𝐀| 𝘼𝙣𝙜𝙜𝙖𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
+    { nama: "𝙁𝙖𝙖𝙉𝙚𝙬𝙗𝙞𝙚 𝗳𝘁'𝗠𝗘𝗔", jabatan: "MEMBER" },
+    { nama: "7P'𝗬𝗮𝗻𝗻𝗡𝗲𝘄𝗕𝗶𝗲`𝗘𝗚𝗦", jabatan: "MEMBER" },
+    { nama: "𝙁𝙖𝙣ﾒ𝙉𝙚𝙬𝙗𝙞𝙚 {紫雲寺}", jabatan: "MEMBER" },
+    { nama: "`𝙍𝙮𝙥𝙯𝙉 𝙇𝙮𝙣𝙭𝙞𝙚.", jabatan: "MEMBER" },
+    { nama: "𝘿𝙖𝙣𝙯 𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
+    { nama: "—►𝘾𝙮𝙣𝙣'𝙉𝙚𝙬𝙗𝙞𝙚【桜の花】", jabatan: "MEMBER" },
+    { nama: "Alice'𝙉𝙚𝙬𝙗𝙞𝙚`𝖋𝖙 𝐍𝐂𝐀", jabatan: "MEMBER" }  
+];
+
     const LoadingManager = {
         interval: null,
         start: function(textId, containerId) {
             const textElement = document.getElementById(textId);
             const container = document.getElementById(containerId);
             const tableBody = document.getElementById('tableBody');
-            
             if (!textElement || !container) return;
-
-            tableBody.innerHTML = ''; 
-
-            const totalEl = document.getElementById('total');
-            const hadirEl = document.getElementById('tHadir');
-            const izinEl = document.getElementById('tIzin');
             
-            if (totalEl) totalEl.innerText = '0';
-            if (hadirEl) hadirEl.innerText = '0';
-            if (izinEl) izinEl.innerText = '0';
+            tableBody.innerHTML = ''; 
+            document.getElementById('total').innerText = '0';
+            document.getElementById('tHadir').innerText = '0';
+            document.getElementById('tIzin').innerText = '0';
             
             container.style.display = 'flex'; 
             let dots = 0;
-            
             if (this.interval) clearInterval(this.interval); 
             this.interval = setInterval(() => {
                 dots = (dots % 3) + 1; 
                 textElement.innerText = "Mencari data" + ".".repeat(dots);
             }, 400);
         },
-
         stop: function(containerId) {
-            if (this.interval) {
-                clearInterval(this.interval);
-                this.interval = null;
-            }
+            if (this.interval) { clearInterval(this.interval); this.interval = null; }
             const container = document.getElementById(containerId);
             if (container) container.style.display = 'none';
         },
-
         error: function(textId) {
-            if (this.interval) {
-                clearInterval(this.interval);
-                this.interval = null;
-            }
+            if (this.interval) { clearInterval(this.interval); this.interval = null; }
             const textElement = document.getElementById(textId);
             if (textElement) {
                 textElement.innerText = "Gagal memuat data";
@@ -271,61 +387,167 @@
     };
 
     function setFilter(type) {
-        if (isFetching) return;
-        filterType = type;
+    if (isFetching) return;
+    filterType = type;
+    
+    document.getElementById('btnToday').classList.toggle('active', type === 'today');
+    document.getElementById('btnAll').classList.toggle('active', type === 'all');
+    document.getElementById('btnMem').classList.toggle('active', type === 'members');
+    
+    const statsContainer = document.querySelector('.stats');
+    const cards = document.querySelectorAll('.stats .card');
+    const labelTotal = cards[0].querySelector('h3');
+    const labelHadir = cards[1].querySelector('h3');
+    const angkaHadir = document.getElementById('tHadir'); 
+    const headers = document.querySelectorAll('#mainTable th');
+
+    if (type === 'members') {
+        cards[2].style.display = 'none';
+        statsContainer.style.display = 'flex';
+        statsContainer.style.justifyContent = 'center';
+        statsContainer.style.gap = '20px';
         
-        document.getElementById('btnToday').classList.toggle('active', type === 'today');
-        document.getElementById('btnAll').classList.toggle('active', type === 'all');
+        cards[0].style.width = '120px';
+        cards[1].style.width = '120px';
+
+        labelTotal.innerText = "TOTAL MEMBER";
+        labelHadir.innerText = "TOTAL ABSEN\nHARI INI";
+        labelHadir.style.color = "#ffffff"; 
         
+        if (angkaHadir) angkaHadir.style.color = "#4ade80"; 
+        
+        // --- PERBAIKAN DI SINI ---
+        headers[0].innerText = "NO.";
+        headers[0].style.textAlign = "center"; // Membuat teks header "NO." di tengah
+        headers[1].style.textAlign = "left";   // Tetap kiri untuk "NAMA"
+        headers[2].innerText = "";
+        headers[2].style.textAlign = "right";  // Tetap kanan untuk "JABATAN"
+        
+        renderManualMembers();
+    } else {
+        cards[2].style.display = 'block';
+        statsContainer.style.display = 'grid'; 
+        statsContainer.style.gridTemplateColumns = 'repeat(3, 1fr)';
+        statsContainer.style.gap = '10px';
+        
+        cards[0].style.width = '';
+        cards[1].style.width = '';
+        
+        labelTotal.innerText = "TOTAL ABSEN";
+        labelHadir.innerText = "TOTAL HADIR";
+        labelHadir.style.color = "";
+        
+        // --- RESET STYLE HEADER ---
+        headers[0].innerText = "WAKTU ABSEN";
+        headers[0].style.textAlign = "left"; 
+        headers[1].style.textAlign = "left";
+        headers[2].innerText = "STATUS";
+        headers[2].style.textAlign = "right";
+
         fetchData(true);
     }
+}
 
+    async function renderManualMembers() {
+    isFetching = true;
+    const containerId = 'loading';
+    const tableBody = document.getElementById('tableBody');
+    const startTime = Date.now();
+
+    LoadingManager.start('loading-text', containerId);
+
+    try {
+        const response = await fetch(`${csvUrl}&v=${Date.now()}`);
+        const text = await response.text();
+        const rows = text.split(/\r?\n/).slice(1);
+        const now = new Date();
+        const f1 = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+        const f2 = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+
+        let countToday = 0;
+        rows.forEach(row => {
+            const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            if (c[0]) {
+                const dateOnly = c[0].replace(/"/g, '').split(' ')[0];
+                if (dateOnly === f1 || dateOnly === f2) countToday++;
+            }
+        });
+
+        let html = '';
+    manualMembers.forEach((m, index) => {
+        html += `<tr>
+            <td style="text-align: center; vertical-align: middle; width: 50px;">
+                <span class="hour-text" style="color: #ff3131; font-weight: 800; display: block; width: 100%;">${index + 1}</span>
+            </td>
+            <td style="text-align: left;">
+                <span class="name-text" style="font-weight: 600; white-space: nowrap;">${m.nama}</span>
+            </td>
+            <td style="text-align: right; padding-right: 15px;">
+                <span class="badge" style="border: 1px solid #ff3131; color: white; background: rgba(255,49,49,0.1); padding: 5px 10px; border-radius: 4px; font-size: 8px; font-weight: bold; display: inline-block; white-space: nowrap; min-width: 65px; text-align: center;">
+                    ${m.jabatan}
+                </span>
+            </td>
+        </tr>`;
+    });
+
+        setTimeout(() => {
+            tableBody.innerHTML = html;
+            document.getElementById('total').innerText = manualMembers.length;
+            document.getElementById('tHadir').innerText = countToday;
+            LoadingManager.stop(containerId);
+            isFetching = false;
+        }, Math.max(0, 600 - (Date.now() - startTime)));
+
+    } catch (e) {
+        LoadingManager.error('loading-text');
+        isFetching = false;
+    }
+}
     async function fetchData(isManual = false) {
+        if (filterType === 'members') return;
         if (isFetching && !isManual) return;
         isFetching = true;
 
-        const textId = 'loading-text';
         const containerId = 'loading';
         const tableBody = document.getElementById('tableBody');
         const startTime = Date.now();
 
-        LoadingManager.start(textId, containerId);
+        LoadingManager.start('loading-text', containerId);
 
         try {
             const response = await fetch(`${csvUrl}&v=${Date.now()}`);
             if (!response.ok) throw new Error('Network error');
-            
             const text = await response.text();
-            const rows = text.split(/\r?\n/).slice(1).filter(r => r.trim() !== "").reverse();
+            const rows = text.split(/\r?\n/).slice(1).filter(r => r.trim() !== "" && r.replace(/,/g, '').trim() !== "").reverse();
             
             const now = new Date();
-            const day = now.getDate();
-            const month = now.getMonth() + 1;
-            const year = now.getFullYear();
-            
-            const format1 = `${day}/${month}/${year}`;
-            const format2 = `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
+            const format1 = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+            const format2 = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
 
             let html = '', h = 0, i = 0, t = 0;
 
             rows.forEach(row => {
                 const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/"/g, '').trim());
-                if (c.length < 5) return;
+                if (!c[0] || !c[1] || c.length < 5) return;
 
                 const timestampFull = c[0]; 
-                const nama = c[1];
-                const status = c[4];
-
                 const parts = timestampFull.split(' ');
                 const dateOnly = parts[0];
-                let timeOnly = parts[1] ? parts[1].substring(0, 8).trim() : "--:--:--"; 
-                if (timeOnly.endsWith(':')) timeOnly = timeOnly.slice(0, -1);
+                
+                let timeOnly = "--:--";
+                if (parts[1]) {
+                    let rawTime = parts[1].trim();
+                    if (rawTime.indexOf(':') === 1) rawTime = '0' + rawTime;
+                    timeOnly = rawTime.substring(0, 5);
+                }
                 
                 const isToday = (dateOnly === format1 || dateOnly === format2);
                 if (filterType === 'today' && !isToday) return;
 
-                t++;
+                const status = c[4] || "Hadir";
                 const isIzin = status.toLowerCase() === 'izin';
+                
+                t++;
                 if (isIzin) i++; else h++;
 
                 html += `<tr>
@@ -335,176 +557,60 @@
                             <span class="date-text">${dateOnly}</span>
                         </div>
                     </td>
-                    <td><span class="name-text">${nama}</span></td>
+                    <td><span class="name-text">${c[1]}</span></td>
                     <td style="text-align:right;">
                         <span class="badge ${isIzin ? 'bg-izin' : 'bg-hadir'}">${status}</span>
                     </td>
                 </tr>`;
             });
 
-            const fetchDuration = Date.now() - startTime;
-            const minimumShowTime = 1300; 
-            const remainingDelay = Math.max(0, minimumShowTime - fetchDuration);
-
             setTimeout(() => {
                 tableBody.innerHTML = html || '<tr><td colspan="3" style="text-align:center; padding:30px; color:#aaa;">Belum ada data.</td></tr>';
-                
                 document.getElementById('total').innerText = t;
                 document.getElementById('tHadir').innerText = h;
                 document.getElementById('tIzin').innerText = i;
-
+                document.getElementById('tHadir').style.color = "#4ade80";
+                document.getElementById('tIzin').style.color = "#fde047";
                 LoadingManager.stop(containerId);
                 isFetching = false;
-            }, remainingDelay);
+            }, Math.max(0, 800 - (Date.now() - startTime)));
 
         } catch (e) {
-            console.error("Gagal sinkronisasi data:", e);
-            LoadingManager.error(textId);
+            LoadingManager.error('loading-text');
             isFetching = false;
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchData();
-    });
-    
-    setInterval(() => {
-        if (!isFetching) fetchData();
-    }, 15000);
+    document.addEventListener('DOMContentLoaded', fetchData);
+    setInterval(() => { if (!isFetching && filterType !== 'members') fetchData(); }, 15000);
 </script>
-<script>
-const updateEnd = new Date("2026-05-02T06:00:00");
-const now = new Date();
+ <script>
+        const updatePopup = document.getElementById("updatePopup");
+        const closeUpdate = document.getElementById("closeUpdate");
 
-if (now <= updateEnd) {
-    document.body.innerHTML = `
-    <img src="https://i.ibb.co.com/m57drpHX/fotolivexjj.jpg" style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 1;
-    " alt="background">
+        // VERSION UPDATE → GANTI INI SETIAP ADA UPDATE BARU
+        const UPDATE_VERSION = "v0.0.5";
 
-    <div style="
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.4); /* Kegelapan latar belakang */
-        z-index: 2;
-    "></div>
+        // cek apakah sudah pernah ditutup
+        if (localStorage.getItem("update_seen") !== UPDATE_VERSION) {
+            setTimeout(() => {
+                updatePopup.style.display = "flex";
+            }, 800);
+        }
 
-    <div id="update-container" style="
-        position:fixed;
-        inset:0;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        font-family:'Poppins', sans-serif;
-        color:white;
-        z-index: 3;
-        overflow:hidden;
-    ">
-        <style>
-            @keyframes fadeIn { from { opacity:0; transform:scale(1.05); } to { opacity:1; transform:scale(1); } }
-            @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
-            @keyframes glow { 0% { box-shadow:0 0 20px rgba(255,0,0,0.3); } 100% { box-shadow:0 0 60px rgba(255,0,0,0.7); } }
-            @keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
-        </style>
+        // tombol close
+        closeUpdate.addEventListener("click", () => {
+            updatePopup.style.display = "none";
+            localStorage.setItem("update_seen", UPDATE_VERSION);
+        });
 
-        <div style="
-            position:relative;
-            background:rgba(20, 20, 20, 0.3);
-            backdrop-filter:blur(3px);
-            -webkit-backdrop-filter:blur(3px);
-            border:1px solid rgba(255,0,0,0.4);
-            padding:2.8rem 2rem;
-            border-radius:25px;
-            text-align:center;
-            max-width:420px;
-            width:90%;
-            animation: float 3s ease-in-out infinite alternate, glow 2s ease-in-out infinite alternate;
-        ">
-            <div style="display:flex; justify-content:center; margin-bottom:15px;">
-                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ff2b2b" stroke-width="2" style="animation:spin 4s linear infinite; filter:drop-shadow(0 0 10px red);">
-                    <polyline points="23 4 23 10 17 10"></polyline>
-                    <polyline points="1 20 1 14 7 14"></polyline>
-                    <path d="M3.51 9a9 9 0 0 1 14.13-3.36L23 10M1 14l5.36 4.36A9 9 0 0 0 20.49 15"></path>
-                </svg>
-            </div>
-            
-            <h1 id="title" style="font-size: 1.8rem; font-weight: 900; color: #ff2b2b; text-shadow: 0 0 15px rgba(255,0,0,0.9); margin-bottom: 10px; letter-spacing: 1px; white-space: nowrap;">
-                UPDATE SYSTEM
-            </h1>
-
-            <p style="color:#bbb; font-size:0.95rem; margin:20px auto; line-height:1.6; text-align:left; max-width:320px;">
-                <span style="display:block; text-align:center;">
-                    Sistem sedang diperbarui<br>
-                    Mohon tunggu sampai selesai<br>
-                    <b id="endDate" style="color:#ff4d4d;"></b>
-                </span>
-                <br>
-                <b style="color:#ff4d4d;">New Features</b><br>
-                • Penambahan cek absensi
-            </p>
-
-<div id="countdown" style="
-    font-weight:700; 
-    font-size:1.1rem; 
-    color:#ff4d4d; 
-    background:rgba(255,0,0,0.12); 
-    padding:12px 22px; 
-    border-radius:50px; 
-    display:inline-block; 
-    letter-spacing:1px;
-    white-space: nowrap; /* Mencegah teks turun ke bawah */
-    min-width: 200px;    /* Memberikan lebar minimum agar box tidak kembang kempis */
-    text-align: center;  /* Memastikan teks tetap di tengah */
-">
-    Loading...
-</div>
-
-        </div>
-    </div>
-    `;
-
-    // LOCK SCROLL
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-
-    // FORMAT TANGGAL
-    const options = { day:'numeric', month:'long', year:'numeric' };
-    document.getElementById("endDate").innerText = updateEnd.toLocaleDateString('id-ID', options);
-
-    // COUNTDOWN
-    function updateCountdown() {
-        const distance = updateEnd - new Date().getTime();
-        if (distance <= 0) { location.reload(); return; }
-
-        const d = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const h = Math.floor((distance / (1000 * 60 * 60)) % 24);
-        const m = Math.floor((distance / (1000 * 60)) % 60);
-        const s = Math.floor((distance / 1000) % 60);
-
-        let result = d > 0 ? `${d} Day ` : "";
-        result += (d > 0 || h > 0) ? `${h} Hours ` : "";
-        result += (d > 0 || h > 0 || m > 0) ? `${m} Minutes ` : "";
-        result += `${s} Seccond`;
-        document.getElementById("countdown").innerHTML = result;
-    }
-
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-
-    // TITLE DOT ANIMATION
-    let dotCount = 0;
-    setInterval(() => {
-        document.getElementById("title").innerText = "UPDATE SYSTEM" + ".".repeat(dotCount);
-        dotCount = (dotCount + 1) % 4;
-    }, 500);
-}
-</script>
-
+        // klik luar box = tutup
+        updatePopup.addEventListener("click", (e) => {
+            if (e.target === updatePopup) {
+                updatePopup.style.display = "none";
+                localStorage.setItem("update_seen", UPDATE_VERSION);
+            }
+        });
+    </script>
 </body> 
 </html>
