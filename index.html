@@ -18,10 +18,28 @@
     * { 
         box-sizing: border-box; 
         -webkit-tap-highlight-color: transparent; 
-        user-select: none; 
-        -webkit-user-select: none; 
         -webkit-font-smoothing: antialiased; 
+        -webkit-user-select: none;  /* Safari */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Mencegah seleksi */
+    -webkit-user-drag: none;    /* Mencegah gambar ditarik (Chrome/Safari) */
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    pointer-events: none;
     }
+
+    /* Tambahkan ini di bagian <style> Anda */
+img {
+    -webkit-user-select: none;  /* Safari */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Mencegah seleksi */
+    -webkit-user-drag: none;    /* Mencegah gambar ditarik (Chrome/Safari) */
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    pointer-events: none;       /* Opsional: Gambar tidak bisa diklik sama sekali */
+}
 
     body { 
     margin: 0; 
@@ -61,6 +79,8 @@
     top: 0;
     left: 0;
     transform: translateZ(0); /* GPU stabilize */
+    pointer-events: none;
+    user-select: none;
 }
 
 /* overlay gelap biar tetap aesthetic */
@@ -159,15 +179,15 @@
     
     table { width: 100%; border-collapse: collapse; table-layout: fixed; }
     
-    th { 
-        background: rgba(255, 49, 49, 0.25); 
-        color: #fff; 
-        padding: 15px 10px; 
-        text-align: left; 
-        font-size: 0.7rem; 
-        text-transform: uppercase; 
-        letter-spacing: 1px; 
-    }
+    /* Update CSS untuk Header dan Sel Tabel */
+th { 
+    background: rgba(255, 49, 49, 0.25); 
+    color: #fff; 
+    padding: 15px 10px; 
+    font-size: 0.7rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+}
 
     td { 
         padding: 14px 10px; 
@@ -177,26 +197,35 @@
     }
     
     th:nth-child(1), td:nth-child(1) { width: 100px; } 
-    th:nth-child(2), td:nth-child(2) { width: auto; } 
-    th:nth-child(3), td:nth-child(3) { width: 85px; text-align: right; }
+    th:nth-child(2), td:nth-child(2) { width: auto;} 
+   th:nth-child(3), td:nth-child(3) { 
+        width: 110px; 
+        text-align: right; 
+        padding-right: 35px; /* KUNCI: Geser status ke kiri */
+    }
 
     .time-wrapper { display: flex; flex-direction: column; }
     .date-text { color: #ccc; font-size: 0.6rem; }
     .hour-text { color: var(--primary); font-size: 0.75rem; font-weight: 700; }
 
-    .name-text { color: #fff; font-weight: 600; line-height: 1.2; word-break: break-word; }
+    .name-text { color: #fff; font-weight: 600; line-height: 1.2; word-break: break-word;}
 
+    /* Pastikan badge tetap rapi dan konsisten */
+/* BADGE SERAGAM */
     .badge { 
-        padding: 4px 8px; 
+        padding: 6px 0; 
         border-radius: 8px; 
         font-size: 0.55rem; 
         font-weight: 800; 
         text-transform: uppercase; 
         display: inline-block; 
+        width: 65px; /* Lebar sama */
+        text-align: center; 
+        margin-right: 24px ;
     }
     
     .bg-hadir { background: rgba(34,197,94,0.3); color: #4ade80; border: 1px solid rgba(34,197,94,0.5); }
-    .bg-izin { background: rgba(250,204,21,0.3); color: #fde047; border: 1px solid rgba(250,204,21,0.5); }
+    .bg-izin { background: rgba(100, 95, 74, 0.3); color: #fde047; border: 1px solid rgba(250,204,21,0.5); }
 
     .loader {
         display: none;
@@ -295,6 +324,7 @@
     white-space: nowrap; /* Mencegah nama turun ke bawah */
     overflow: visible;   /* Pastikan tidak tersembunyi */
     min-width: 150px;    /* Memberikan ruang minimal untuk nama */
+    margin-left: -12px;
 }
 
 /* Memastikan sel tabel tidak memotong konten */
@@ -418,10 +448,10 @@
     </div>
 </div>
 <script>
+    // Konfigurasi & State
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqxUK5bAyaQ0zDPb6a54KwQEmYAcucCX6pizMfxQA3p8XEs1C-OABtOlVi3dapwmSFzzJkr4kN6Wei/pub?gid=1525581949&single=true&output=csv';
-    // UPDATE: Default ke 'week' atau tetap 'today' sesuai keinginan awal
-    let filterType = 'week'; 
-    let isFetching = false; 
+    let filterType = 'week';
+    let isFetching = false;
 
     const manualMembers = [
         { nama: "𝘿𝙖𝙣𝙉𝙚𝙬𝙗𝙞𝙚 ft 𝗔𝗣", jabatan: "KETUA" },
@@ -436,7 +466,7 @@
         { nama: "𝙁𝘼𝙍𝙕𝙕𝙉𝙚𝙬𝙗𝙞𝙚", jabatan: "MEMBER" },
         { nama: "𝙎𝙖𝙝𝙞𝙧𝙪𝙉𝙚𝙬𝙗i`ᶠᵗ𝘼𝙀𝙂", jabatan: "MEMBER" },
         { nama: "𝘽𝙖𝙧𝙧𝙉𝙚𝙬𝙗𝙞𝙚`VSC(紫雲寺)", jabatan: "MEMBER" },
-        { nama: "𝐋𝟕`𝙕𝙞𝙙𝙖𝙣𝙉𝙚𝙬𝙗𝙞𝙚紫雲寺", jabatan: "MEMBER" },
+        { nama: "𝐋𝟕`𝙕𝙞дан𝙉𝙚𝙬𝙗𝙞𝙚紫雲寺", jabatan: "MEMBER" },
         { nama: "FIzz 𝙉𝙚𝙬𝘽𝙞𝙚 𝖋𝖙 𝘼𝙀𝙄⭐", jabatan: "MEMBER" },
         { nama: "YukiNewbie", jabatan: "MEMBER" },
         { nama: "𝙑𝙖𝙣𝙯𝙉𝙚𝙬𝙗𝙞𝙚`𝖿𝗍 𝐒𝐏", jabatan: "MEMBER" },
@@ -463,24 +493,28 @@
         { nama: "—𝙉𝙪𝙧𝙯𝙯𝙉𝙚𝙬𝙗𝙞𝙚友", jabatan: "MEMBER" }
     ];
 
+    // Manajemen UI Loading
     const LoadingManager = {
         interval: null,
         start: function(textId, containerId) {
             const textElement = document.getElementById(textId);
             const container = document.getElementById(containerId);
             const tableBody = document.getElementById('tableBody');
+            
             if (!textElement || !container) return;
             
-            tableBody.innerHTML = ''; 
+            // Reset UI
+            tableBody.innerHTML = '';
             document.getElementById('total').innerText = '0';
             document.getElementById('tHadir').innerText = '0';
             document.getElementById('tIzin').innerText = '0';
             
-            container.style.display = 'flex'; 
+            container.style.display = 'flex';
             let dots = 0;
-            if (this.interval) clearInterval(this.interval); 
+            if (this.interval) clearInterval(this.interval);
+            
             this.interval = setInterval(() => {
-                dots = (dots % 3) + 1; 
+                dots = (dots % 3) + 1;
                 textElement.innerText = "Mencari data" + ".".repeat(dots);
             }, 400);
         },
@@ -494,139 +528,133 @@
             const textElement = document.getElementById(textId);
             if (textElement) {
                 textElement.innerText = "Gagal memuat data";
-                textElement.style.color = "#ff4d4d"; 
+                textElement.style.color = "#ff4d4d";
             }
         }
     };
 
-   function setFilter(type) {
-    if (isFetching) return;
-    filterType = type;
-    
-    const btnWeek = document.getElementById('btnWeek');
-    const btnAll = document.getElementById('btnAll');
-    const btnMem = document.getElementById('btnMem');
+    // Fungsi Pengatur Filter
+    function setFilter(type) {
+        if (isFetching) return;
+        filterType = type;
 
-    if (btnWeek) btnWeek.classList.toggle('active', type === 'week');
-    if (btnAll) btnAll.classList.toggle('active', type === 'all');
-    if (btnMem) btnMem.classList.toggle('active', type === 'members');
-    
-    const statsContainer = document.querySelector('.stats');
-    const cards = document.querySelectorAll('.stats .card');
-    const labelTotal = cards[0].querySelector('h3');
-    const labelHadir = cards[1].querySelector('h3');
-    const labelIzin = cards[2] ? cards[2].querySelector('h3') : null;
-    const angkaHadir = document.getElementById('tHadir'); 
-    const headers = document.querySelectorAll('#mainTable th');
+        // UI Button Toggle
+        document.getElementById('btnWeek')?.classList.toggle('active', type === 'week');
+        document.getElementById('btnAll')?.classList.toggle('active', type === 'all');
+        document.getElementById('btnMem')?.classList.toggle('active', type === 'members');
 
-    if (type === 'members') {
-        // Tampilan khusus Tab ANGGOTA
-        if (cards[2]) cards[2].style.display = 'none'; // Sembunyikan kartu ke-3 (Izin)
-        
-        statsContainer.style.display = 'flex';
-        statsContainer.style.justifyContent = 'center';
-        statsContainer.style.gap = '20px';
-        
-        cards[0].style.width = '140px';
-        cards[1].style.width = '140px';
+        const statsContainer = document.querySelector('.stats');
+        const cards = document.querySelectorAll('.stats .card');
+        const labelTotal = cards[0]?.querySelector('h3');
+        const labelHadir = cards[1]?.querySelector('h3');
+        const labelIzin = cards[2]?.querySelector('h3');
+        const angkaHadir = document.getElementById('tHadir');
+        const headers = document.querySelectorAll('#mainTable th');
 
-        labelTotal.innerText = "TOTAL MEMBER";
-        labelHadir.innerText = "TOTAL ADMIN"; // Mengubah label Hadir menjadi Admin
-        labelHadir.style.color = "#ffffff"; 
-        
-        if (angkaHadir) angkaHadir.style.color = "#4ade80"; 
-        
-        // Header Tabel Mode Anggota
-        headers[0].innerText = "NO.";
-        headers[0].style.textAlign = "center"; 
-        headers[1].style.textAlign = "left";   
-        headers[2].innerText = ""; 
-        headers[2].style.textAlign = "right";  
-        
-        renderManualMembers();
-    } else {
-        // Tampilan untuk Tab MINGGU INI & SEMUA
-        if (cards[2]) cards[2].style.display = 'block';
-        
-        statsContainer.style.display = 'grid'; 
-        statsContainer.style.gridTemplateColumns = 'repeat(3, 1fr)';
-        statsContainer.style.gap = '10px';
-        
-        cards[0].style.width = '';
-        cards[1].style.width = '';
-        
-        labelTotal.innerText = (type === 'week') ? "TOTAL MINGGU INI" : "TOTAL ABSEN";
-        labelHadir.innerText = (type === 'week') ? "HADIR MINGGU INI" : "TOTAL HADIR";
-        if (labelIzin) labelIzin.innerText = (type === 'week') ? "IZIN MINGGU INI" : "TOTAL IZIN";
-        
-        labelHadir.style.color = "";
-        if (angkaHadir) angkaHadir.style.color = "#4ade80";
+        if (type === 'members') {
+            // Tampilan Tab ANGGOTA
+            if (cards[2]) cards[2].style.display = 'none';
+            
+            statsContainer.style.display = 'flex';
+            statsContainer.style.justifyContent = 'center';
+            statsContainer.style.gap = '20px';
 
-        // Header Tabel Mode Absensi
-        headers[0].innerText = "WAKTU ABSEN";
-        headers[0].style.textAlign = "left"; 
-        headers[1].style.textAlign = "left";
-        headers[2].innerText = "STATUS";
-        headers[2].style.textAlign = "right";
+            cards[0].style.width = '140px';
+            cards[1].style.width = '140px';
 
-        fetchData(true);
+            labelTotal.innerText = "TOTAL MEMBER";
+            labelHadir.innerText = "TOTAL ADMIN";
+            labelHadir.style.color = "#ffffff";
+            if (angkaHadir) angkaHadir.style.color = "#4ade80";
+
+           // Header Tabel Mode Anggota
+            headers[0].innerText = "NO.";
+            headers[0].style.textAlign = "center";
+            
+            // Menambahkan teks NAMA MEMBER
+            headers[1].innerText = "NAMA MEMBER"; 
+            headers[1].style.textAlign = "center";  
+            
+            headers[2].innerText = ""; // Opsional: Memberi nama kolom ke-3
+            headers[2].style.textAlign = "right";
+           
+
+            
+            renderManualMembers();
+        } else {
+            // Tampilan Tab ABSENSI (Minggu Ini & Semua)
+            if (cards[2]) cards[2].style.display = 'block';
+            
+            statsContainer.style.display = 'grid';
+            statsContainer.style.gridTemplateColumns = 'repeat(3, 1fr)';
+            statsContainer.style.gap = '10px';
+
+            cards[0].style.width = '';
+            cards[1].style.width = '';
+
+            labelTotal.innerText = (type === 'week') ? "TOTAL MINGGU INI" : "TOTAL ABSEN";
+            labelHadir.innerText = (type === 'week') ? "HADIR MINGGU INI" : "TOTAL HADIR";
+            if (labelIzin) labelIzin.innerText = (type === 'week') ? "IZIN MINGGU INI" : "TOTAL IZIN";
+
+            labelHadir.style.color = "";
+            if (angkaHadir) angkaHadir.style.color = "#4ade80";
+            headers[0].innerText = "WAKTU ABSEN";
+            headers[0].style.textAlign = "center";
+            headers[1].innerText = "NAMA MEMBER";
+            headers[1].style.textAlign = "center";
+            headers[2].innerText = "STATUS";
+            headers[2].style.textAlign = "";
+
+            fetchData(true);
+        }
     }
-}
+
+    // Render Daftar Anggota Manual
     async function renderManualMembers() {
-    isFetching = true;
-    const containerId = 'loading';
-    const tableBody = document.getElementById('tableBody');
-    const startTime = Date.now();
+        isFetching = true;
+        const containerId = 'loading';
+        const tableBody = document.getElementById('tableBody');
+        const startTime = Date.now();
 
-    // Memulai animasi loading
-    LoadingManager.start('loading-text', containerId);
+        LoadingManager.start('loading-text', containerId);
 
-    try {
-        // 1. Menghitung jumlah Admin & Ketua dari daftar manualMembers
-        const totalAdmin = manualMembers.filter(m => 
-            m.jabatan === "ADMIN" || m.jabatan === "KETUA"
-        ).length;
+        try {
+            const totalAdmin = manualMembers.filter(m => 
+                m.jabatan === "ADMIN" || m.jabatan === "KETUA"
+            ).length;
 
-        // 2. Membuat baris tabel berdasarkan daftar manualMembers
-        let html = '';
-        manualMembers.forEach((m, index) => {
-            html += `<tr>
-                <td style="text-align: center; vertical-align: middle; width: 50px;">
-                    <span class="hour-text" style="color: #ff3131; font-weight: 800; display: block; width: 100%;">${index + 1}</span>
-                </td>
-                <td style="text-align: left;">
-                    <span class="name-text" style="font-weight: 600; white-space: nowrap;">${m.nama}</span>
-                </td>
-                <td style="text-align: right; padding-right: 15px;">
-                    <span class="badge" style="border: 1px solid #ff3131; color: white; background: rgba(255,49,49,0.1); padding: 5px 10px; border-radius: 4px; font-size: 8px; font-weight: bold; display: inline-block; white-space: nowrap; min-width: 65px; text-align: center;">
-                        ${m.jabatan}
-                    </span>
-                </td>
-            </tr>`;
-        });
+            const html = manualMembers.map((m, index) => `
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; width: 50px;">
+                        <span class="hour-text" style="color: #ff3131; font-weight: 800;">${index + 1}</span>
+                    </td>
+                    <td style="text-align: left;">
+                        <span class="name-text" style="font-weight: 600; white-space: nowrap;">${m.nama}</span>
+                    </td>
+                    <td style="text-align: right; padding-right: 15px;">
+                        <span class="badge" style="border: 1px solid #ff3131; color: white; background: rgba(255,49,49,0.1); padding: 5px 10px; border-radius: 4px; font-size: 8px; font-weight: bold; display: inline-block; min-width: 65px; text-align: center;">
+                            ${m.jabatan}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
 
-        // 3. Update tampilan (dengan sedikit delay agar transisi loading halus)
-        setTimeout(() => {
-            tableBody.innerHTML = html;
-            
-            // Update elemen statistik
-            // Kolom pertama: Total semua member di array
-            document.getElementById('total').innerText = manualMembers.length; 
-            
-            // Kolom kedua: Angka jumlah Admin/Ketua
-            document.getElementById('tHadir').innerText = totalAdmin; 
-            
-            LoadingManager.stop(containerId);
+            setTimeout(() => {
+                tableBody.innerHTML = html;
+                document.getElementById('total').innerText = manualMembers.length;
+                document.getElementById('tHadir').innerText = totalAdmin;
+                LoadingManager.stop(containerId);
+                isFetching = false;
+            }, Math.max(0, 600 - (Date.now() - startTime)));
+
+        } catch (e) {
+            console.error("Error rendering members:", e);
+            LoadingManager.error('loading-text');
             isFetching = false;
-        }, Math.max(0, 600 - (Date.now() - startTime)));
-
-    } catch (e) {
-        console.error("Gagal merender daftar member:", e);
-        LoadingManager.error('loading-text');
-        isFetching = false;
+        }
     }
-}
 
+    // Ambil Data dari CSV (Google Sheets)
     async function fetchData(isManual = false) {
         if (filterType === 'members') return;
         if (isFetching && !isManual) return;
@@ -641,11 +669,14 @@
         try {
             const response = await fetch(`${csvUrl}&v=${Date.now()}`);
             if (!response.ok) throw new Error('Network error');
+            
             const text = await response.text();
-            const rows = text.split(/\r?\n/).slice(1).filter(r => r.trim() !== "" && r.replace(/,/g, '').trim() !== "").reverse();
+            const rows = text.split(/\r?\n/)
+                             .slice(1)
+                             .filter(r => r.trim() !== "" && r.replace(/,/g, '').trim() !== "")
+                             .reverse();
             
             const now = new Date();
-            // UPDATE: Set jam ke 00:00 agar kalkulasi hari akurat
             const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
             let html = '', h = 0, i = 0, t = 0;
@@ -654,30 +685,23 @@
                 const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/"/g, '').trim());
                 if (!c[0] || !c[1] || c.length < 5) return;
 
-                const timestampFull = c[0]; 
+                const timestampFull = c[0];
                 const parts = timestampFull.split(' ');
                 const dateOnly = parts[0];
                 
-                // UPDATE: Logika filter Minggu Ini (7 hari terakhir)
+                // Kalkulasi Selisih Hari
                 const dateParts = dateOnly.split('/');
                 const recordDate = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
-                const timeDiff = todayStart - recordDate;
-                const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                const dayDiff = Math.ceil((todayStart - recordDate) / (1000 * 60 * 60 * 24));
 
                 // Filter Logic
-                if (filterType === 'today') {
-                    const f1 = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
-                    const f2 = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
-                    if (dateOnly !== f1 && dateOnly !== f2) return;
-                } else if (filterType === 'week') {
-                    if (dayDiff < 0 || dayDiff > 7) return; // Maksimal 7 hari kebelakang
-                }
+                if (filterType === 'week' && (dayDiff < 0 || dayDiff > 7)) return;
 
                 let timeOnly = "--:--:--";
                 if (parts[1]) {
                     let rawTime = parts[1].trim();
                     if (rawTime.indexOf(':') === 1) rawTime = '0' + rawTime;
-                    timeOnly = rawTime.substring(0, 8); 
+                    timeOnly = rawTime.substring(0, 8);
                 }
                 
                 const status = c[4] || "Hadir";
@@ -686,18 +710,19 @@
                 t++;
                 if (isIzin) i++; else h++;
 
-                html += `<tr>
-                    <td>
-                        <div class="time-wrapper">
-                            <span class="hour-text">${timeOnly}</span>
-                            <span class="date-text">${dateOnly}</span>
-                        </div>
-                    </td>
-                    <td><span class="name-text">${c[1]}</span></td>
-                    <td style="text-align:right;">
-                        <span class="badge ${isIzin ? 'bg-izin' : 'bg-hadir'}">${status}</span>
-                    </td>
-                </tr>`;
+                html += `
+                    <tr>
+                        <td>
+                            <div class="time-wrapper">
+                                <span class="hour-text">${timeOnly}</span>
+                                <span class="date-text">${dateOnly}</span>
+                            </div>
+                        </td>
+                        <td><span class="name-text">${c[1]}</span></td>
+                        <td style="text-align:right;">
+                            <span class="badge ${isIzin ? 'bg-izin' : 'bg-hadir'}">${status}</span>
+                        </td>
+                    </tr>`;
             });
 
             setTimeout(() => {
@@ -712,13 +737,19 @@
             }, Math.max(0, 800 - (Date.now() - startTime)));
 
         } catch (e) {
+            console.error("Fetch error:", e);
             LoadingManager.error('loading-text');
             isFetching = false;
         }
     }
 
-    document.addEventListener('DOMContentLoaded', fetchData);
-    setInterval(() => { if (!isFetching && filterType !== 'members') fetchData(); }, 15000);
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => fetchData(true));
+    
+    // Auto Refresh setiap 15 detik (kecuali di tab members)
+    setInterval(() => { 
+        if (!isFetching && filterType !== 'members') fetchData(); 
+    }, 15000);
 </script>
  <script>
     const updatePopup = document.getElementById("updatePopup");
